@@ -60,7 +60,9 @@ class User extends Authenticatable
         );
 
         $receiverNumber = auth()->user()->phone;
-        $message = "2FA login code is ". $code;
+        $message = "tu código de verificación es ". $code;
+
+        echo $message;
 
         try {
 

@@ -39,7 +39,7 @@ class TwoFAController extends Controller
             return redirect()->route('home');
         }
 
-        return back()->with('error', 'You entered wrong code.');
+        return back()->with('error', 'Código incorrecto');
     }
     /**
      * Write code on Method
@@ -50,6 +50,6 @@ class TwoFAController extends Controller
     {
         auth()->user()->generateCode();
 
-        return back()->with('success', 'We sent you code on your mobile number.');
+        return back()->with('success', 'Te envíamos un código a tu celular');
     }
 }

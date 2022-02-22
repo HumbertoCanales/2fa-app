@@ -23,6 +23,7 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                session()->put('url.intended', url()->current());
                 return redirect(RouteServiceProvider::HOME);
             }
         }

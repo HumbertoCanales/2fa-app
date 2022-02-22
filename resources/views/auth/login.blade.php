@@ -1,9 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-@if (Auth::check())
-    <script>window.location = "/home";</script>
-@else
 <div class="container">
     <div class="d-flex justify-content-center h-75">
         <div class="card">
@@ -13,7 +10,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="{{ route('login.post') }}">
                     @csrf
                     <div class="input-group form-group">
                         <div class="input-group-prepend">
@@ -36,27 +33,27 @@
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password"
                         required autocomplete="current-password" placeholder="Contraseña">
                     </div>
-                    <div class="row align-items-center remember">
-                        <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>Recuérdame
-                    </div>
+                    @if ($message = Session::get('error'))
+                        <div class="row">
+                          <div class="col-md-12">
+                              <div class="alert alert-danger alert-block alert-dismissible fade show" role="alert">
+                                <button type="button" class="close" data-bs-dismiss="alert">×</button>
+                                  <strong>{{ $message }}</strong>
+                              </div>
+                          </div>
+                        </div>
+                    @endif
                     <div class="form-group">
                         <input type="submit" value="Iniciar sesión" class="btn float-right login_btn">
                     </div>
                 </form>
-                <br>
-                <div class="card-footer">
-                    <div class="d-flex justify-content-center links">
-                        ¿No tienes una cuenta?<a href="{{ route('register') }}">Regístrate</a>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <a class="btn btn-link" href="{{ route('password.request') }}">
-                            ¿Olvidaste tu contraseña?
-                        </a>
-                    </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-center links">
+                    ¿No tienes una cuenta?<a href="{{ route('register') }}">Regístrate</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@endif
 @endsection
