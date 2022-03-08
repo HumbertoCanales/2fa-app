@@ -18,7 +18,7 @@ class Check2FA
     public function handle(Request $request, Closure $next)
     {
         if (!Session::has('user_2fa')) {
-            return redirect()->route('2fa.index');
+            return url()->previous();
         }
 
         return $next($request);

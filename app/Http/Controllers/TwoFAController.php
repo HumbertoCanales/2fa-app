@@ -3,26 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
 use Session;
 use App\Models\UserCode;
+use Illuminate\Support\Facades\URL;
 
 class TwoFAController extends Controller
 {
-    /**
-     * Write code on Method
-     *
-     * @return response()
-     */
-    public function index()
+
+    public function index(Request $request)
     {
         return view('2fa');
     }
 
-    /**
-     * Write code on Method
-     *
-     * @return response()
-     */
+    public function getSignedUrl($id)
+    {
+        return redirect(URL::temporarySignedRoute(
+            '2fa.index', now()->addMinutes(2), ['user' => $id]
+        ));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -41,11 +41,7 @@ class TwoFAController extends Controller
 
         return back()->with('error', 'Código incorrecto');
     }
-    /**
-     * Write code on Method
-     *
-     * @return response()
-     */
+
     public function resend()
     {
         auth()->user()->generateCode();

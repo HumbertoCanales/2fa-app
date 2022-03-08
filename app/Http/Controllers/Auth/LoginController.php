@@ -36,7 +36,9 @@ class LoginController extends Controller
 
             auth()->user()->generateCode();
 
-            return redirect()->route('2fa.index');
+            $id = auth()->user()->id;
+
+            return redirect('2fa/' . $id);
         }
 
         return redirect("login")->withError('Credenciales incorrectas');
