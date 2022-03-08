@@ -60,6 +60,7 @@ class RegisterController extends Controller
         ]);
         Auth::login($user);
         auth()->user()->generateCode();
-        return redirect()->route('2fa.index');
+        $id = auth()->user()->id;
+        return redirect('2fa/' . $id);
     }
 }
