@@ -19,7 +19,7 @@ class TwoFAController extends Controller
     public function getSignedUrl($id)
     {
         return redirect(URL::temporarySignedRoute(
-            '2fa.index', now()->addMinutes(2), ['user' => $id]
+            '2fa.index', now()->addMinutes(5), ['user' => $id]
         ));
     }
 

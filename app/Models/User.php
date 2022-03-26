@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Exception;
 use Twilio\Rest\Client;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -60,9 +63,22 @@ class User extends Authenticatable
         );
 
         $receiverNumber = auth()->user()->phone;
-        $message = "tu código de verificación es ". $code;
 
-        echo $message;
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadHTML('<h1 style="font-size: 50px">'.$code.'</h1>');
+        $folder = getenv('DO_SPACES_FOLDER');
+        $uuid = (string) Str::uuid();
+        $fileName = $folder.'/'.$uuid.'.pdf';
+        Storage::put($fileName, $pdf->output());
+        $url = Storage::temporaryUrl($fileName, now()->addMinutes(5));
+        $data = ["long_url" => $url];
+        $json = json_encode($data);
+
+        $response = Http::withBody($json, 'application/json')->withOptions([
+            'headers' => ['Authorization' => 'Bearer '.getenv('BITLY_TOKEN'),]
+        ])->post("https://api-ssl.bitly.com/v4/shorten");
+
+        $message = $response['link'];
 
         try {
 
